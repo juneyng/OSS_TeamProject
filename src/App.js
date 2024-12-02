@@ -14,7 +14,7 @@ const App = () => {
       const END_IDX = 5; // 데이터 요청 종료 인덱스
 
       // 요청 URL 구성
-      const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
+      const url = `https://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
 
       try {
         const response = await fetch(url); // API 요청
