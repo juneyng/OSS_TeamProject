@@ -1,23 +1,23 @@
-// import React from "react";
-// import {
-//   BrowserRouter as Router,
-//   Routes,
-//   Route,
-//   Navigate,
-// } from "react-router-dom";
-// import List from "./page/List";
-// import Create from "./page/Create";
-// import Update from "./page/Update";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import RecipeList from "./page/RecipeList";
+import MyList from "./page/myList";
+import Recipe from "./page/Recipe";
 
-// export default function AppRouter() {
-//   return (
-//     // <Router>
-//     //   <Routes>
-//     //     <Route path="/" element={<Navigate to="/list" />} />
-//     //     <Route path="/list" element={<List />} />
-//     //     <Route path="/create" element={<Create />} />
-//     //     <Route path="/update" element={<Update />} />
-//     //   </Routes>
-//     // </Router>
-//   );
-// }
+export default function AppRouter() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/recipe-list" />} />
+        <Route path="/recipe-list" element={<RecipeList />} />
+        <Route path="/mylist" element={<MyList />} />
+        <Route path="/recipe" element={<Recipe />} />
+      </Routes>
+    </Router>
+  );
+}
