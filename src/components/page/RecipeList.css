@@ -8,16 +8,16 @@ body {
 }
 .logo {
   display: flex;
-  justify-content: center; /* 수평 가운데 정렬 */
+  justify-content: center;
 }
 .img1 {
   width: 20%;
 }
 .logo-search-container {
   display: flex;
-  justify-content: center; /* 수평 가운데 정렬 */
-  top: 50%; /* 수직 가운데 정렬 */
-  left: 50%; /* 수평 가운데 정렬 */
+  justify-content: center;
+  top: 50%;
+  left: 50%;
   gap: 10px;
 }
 

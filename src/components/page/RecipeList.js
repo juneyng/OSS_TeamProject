@@ -5,8 +5,8 @@ import cookingnote from "./cookingnote.jpg";
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
-  const [filteredRecipes, setFilteredRecipes] = useState([]); // 검색된 레시피 목록
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const RecipeList = () => {
         }
         const data = await response.json();
         setRecipes(data.COOKRCP01.row);
-        setFilteredRecipes(data.COOKRCP01.row); // 초기에는 전체 목록을 필터링 목록에 설정
+        setFilteredRecipes(data.COOKRCP01.row);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -40,7 +40,7 @@ const RecipeList = () => {
   }, []);
 
   const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase(); // 검색어를 소문자로 변환
+    const term = e.target.value.toLowerCase(); // 검색어 소문자로 변환
     setSearchTerm(term);
 
     const filtered = recipes.filter(
@@ -49,15 +49,50 @@ const RecipeList = () => {
         recipe.RCP_PAT2.toLowerCase().includes(term) // 요리 분류 검색
     );
 
-    setFilteredRecipes(filtered); // 필터링된 목록 업데이트
+    setFilteredRecipes(filtered);
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const handleSaveToMockAPI = async (recipe) => {
+    // '담기' 버튼 누를 시 mockAPI에 전달됨
+    const payload = {
+      id: recipe.RCP_SEQ,
+      menuName: recipe.RCP_NM, // 메뉴 이름
+      ingredients: recipe.RCP_PARTS_DTLS, // 사용된 재료
+      haveReview: true, // 리뷰 여부
+      cookTime: null,
+      cookLevel: null,
+      foodScore: null,
+      foodComment: null,
+    };
+
+    try {
+      const response = await fetch(
+        "https://672819f2270bd0b975546091.mockapi.io/api/v1/recipeNote",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (response.ok) {
+        alert(`${recipe.RCP_NM}이(가) 나의 노트에 저장되었습니다.`);
+      } else {
+        throw new Error("저장에 실패했습니다.");
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   const handleRecipeClick = (id) => {
     navigate(`/recipe/${id}`); // /recipe/:id 경로로 이동
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="recipe-list-container">
@@ -83,29 +118,34 @@ const RecipeList = () => {
       <div className="option">
         <nav>
           <ul>
-            <li>추천</li>
-            <li>분류</li>
-            <li>랭킹</li>
-            <li>매거진</li>
-            <li>더보기</li>
+            <li>밥</li>
+            <li>반찬</li>
+            <li>국/찌개</li>
+            <li>후식</li>
+            <li>기타</li>
           </ul>
         </nav>
       </div>
+
       <div className="recipe-list">
         {filteredRecipes.length > 0 ? (
           filteredRecipes.map((recipe) => (
-            <div
-              key={recipe.RCP_SEQ}
-              className="recipe-card"
-              onClick={() => handleRecipeClick(recipe.RCP_SEQ)}
-            >
+            <div key={recipe.RCP_SEQ} className="recipe-card">
               <p className="recipe-category">{recipe.RCP_PAT2}</p>
               <img
                 src={recipe.ATT_FILE_NO_MAIN}
                 alt={recipe.RCP_NM}
                 className="recipe-image"
+                onClick={() => handleRecipeClick(recipe.RCP_SEQ)}
+                style={{ cursor: "pointer" }}
               />
               <p className="recipe-title">{recipe.RCP_NM}</p>
+              <button
+                className="save-button"
+                onClick={() => handleSaveToMockAPI(recipe)}
+              >
+                담기
+              </button>
             </div>
           ))
         ) : (
