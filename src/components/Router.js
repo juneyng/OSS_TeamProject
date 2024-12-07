@@ -16,7 +16,7 @@ export default function AppRouter() {
         <Route path="/" element={<Navigate to="/recipe-list" />} />
         <Route path="/recipe-list" element={<RecipeList />} />
         <Route path="/mylist" element={<MyList />} />
-        <Route path="/recipe" element={<Recipe />} />
+        <Route path="/recipe/:id" element={<Recipe />} />
       </Routes>
     </Router>
   );

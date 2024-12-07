@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RecipeList.css";
+import cookingnote from "./cookingnote.jpg";
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -16,9 +17,9 @@ const RecipeList = () => {
       const SERVICE_ID = "COOKRCP01";
       const DATA_TYPE = "json";
       const START_IDX = 1;
-      const END_IDX = 3;
+      const END_IDX = 1000;
 
-      const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
+      const url = `https://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
 
       try {
         const response = await fetch(url);
@@ -54,14 +55,32 @@ const RecipeList = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const handleRecipeClick = (recipe) => {
-    navigate("/recipe", { state: { recipe } });
+  const handleRecipeClick = (id) => {
+    navigate(`/recipe/${id}`); // /recipe/:id 경로로 이동
   };
 
   return (
     <div className="recipe-list-container">
-      <header className="header">
-        <h1>요리 노트</h1>
+      <div className="logo">
+        <img
+          className="img1"
+          src={cookingnote}
+          alt="요리 노트"
+          style={{ cursor: "pointer" }}
+          onClick={() => (window.location.href = "/recipe-list")}
+        />
+      </div>
+
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="레시피 이름 또는 요리 분류로 검색하세요"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </div>
+
+      <div className="option">
         <nav>
           <ul>
             <li>추천</li>
@@ -71,14 +90,6 @@ const RecipeList = () => {
             <li>더보기</li>
           </ul>
         </nav>
-      </header>
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="레시피 이름 또는 요리 분류로 검색하세요"
-          value={searchTerm}
-          onChange={handleSearch}
-        />
       </div>
       <div className="recipe-list">
         {filteredRecipes.length > 0 ? (
@@ -86,7 +97,7 @@ const RecipeList = () => {
             <div
               key={recipe.RCP_SEQ}
               className="recipe-card"
-              onClick={() => handleRecipeClick(recipe)}
+              onClick={() => handleRecipeClick(recipe.RCP_SEQ)}
             >
               <p className="recipe-category">{recipe.RCP_PAT2}</p>
               <img

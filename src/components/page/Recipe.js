@@ -1,13 +1,43 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Recipe = () => {
-  const location = useLocation();
-  const recipe = location.state?.recipe; // 전달받은 레시피 데이터
+  const { id } = useParams(); // URL의 :id 파라미터 가져오기
+  const [recipe, setRecipe] = useState(null); // 레시피 데이터 저장
+  const [error, setError] = useState(null); // 에러 상태 관리
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
-  if (!recipe) {
-    return <p>레시피 데이터를 찾을 수 없습니다.</p>;
-  }
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      const API_KEY = "12847d8415f74e28b267"; // 발급받은 API 키
+      const SERVICE_ID = "COOKRCP01";
+      const DATA_TYPE = "json";
+
+      const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/1/100`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const selectedRecipe = data.COOKRCP01.row.find(
+          (recipe) => recipe.RCP_SEQ === id
+        ); // RCP_SEQ로 필터링
+        setRecipe(selectedRecipe);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipe();
+  }, [id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!recipe) return <p>레시피를 찾을 수 없습니다.</p>;
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto" }}>
