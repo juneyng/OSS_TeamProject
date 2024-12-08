@@ -17,7 +17,7 @@ const RecipeList = () => {
   const initialPage = parseInt(query.get("page"), 10) || 1;
   const [page, setPage] = useState(initialPage);
 
-  const fetchRecipes = async () => {
+  const fetchRecipes = useCallBack(async () => {
     const API_KEY = "12847d8415f74e28b267";
     const SERVICE_ID = "COOKRCP01";
     const DATA_TYPE = "json";
@@ -40,7 +40,7 @@ const RecipeList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
 
   useEffect(() => {
     fetchRecipes();
