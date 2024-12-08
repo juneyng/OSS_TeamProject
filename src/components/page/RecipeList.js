@@ -44,7 +44,7 @@ const RecipeList = () => {
 
   useEffect(() => {
     fetchRecipes();
-  }, [page]);
+  }, [fetchRecipes]);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase(); // 검색어 소문자로 변환
