@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./RecipeList.css";
 import cookingnote from "./cookingnote.jpg";
 
@@ -10,34 +10,41 @@ const RecipeList = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+  const RECIPES_PER_PAGE = 12;
+
+  const query = new URLSearchParams(location.search);
+  const initialPage = parseInt(query.get("page"), 10) || 1;
+  const [page, setPage] = useState(initialPage);
+
+  const fetchRecipes = async () => {
+    const API_KEY = "12847d8415f74e28b267";
+    const SERVICE_ID = "COOKRCP01";
+    const DATA_TYPE = "json";
+    const START_IDX = (page - 1) * RECIPES_PER_PAGE + 1;
+    const END_IDX = page * RECIPES_PER_PAGE;
+
+    const url = `https://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
+
+    try {
+      setLoading(true);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setRecipes(data.COOKRCP01.row);
+      setFilteredRecipes(data.COOKRCP01.row);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      const API_KEY = "12847d8415f74e28b267";
-      const SERVICE_ID = "COOKRCP01";
-      const DATA_TYPE = "json";
-      const START_IDX = 1;
-      const END_IDX = 1000;
-
-      const url = `https://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setRecipes(data.COOKRCP01.row);
-        setFilteredRecipes(data.COOKRCP01.row);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchRecipes();
-  }, []);
+  }, [page]);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase(); // 검색어 소문자로 변환
@@ -50,6 +57,20 @@ const RecipeList = () => {
     );
 
     setFilteredRecipes(filtered);
+  };
+
+  const handleNextPage = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    navigate(`?page=${nextPage}`); // URL 업데이트
+  };
+
+  const handlePrevPage = () => {
+    const prevPage = page - 1;
+    if (prevPage > 0) {
+      setPage(prevPage);
+      navigate(`?page=${prevPage}`); // URL 업데이트
+    }
   };
 
   const handleSaveToMockAPI = async (recipe) => {
@@ -151,6 +172,22 @@ const RecipeList = () => {
         ) : (
           <p className="no-results">검색 결과가 없습니다.</p>
         )}
+      </div>
+      <div className="pagination">
+        <button
+          className="pagination-button"
+          onClick={handlePrevPage}
+          disabled={page === 1}
+        >
+          이전
+        </button>
+        <span className="pagination-page">페이지 {page}</span>
+        <button
+          className="pagination-button"
+          onClick={handleNextPage}
+        >
+          다음
+        </button>
       </div>
     </div>
   );
