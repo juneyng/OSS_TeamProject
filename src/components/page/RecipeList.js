@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./RecipeList.css";
 import cookingnote from "./cookingnote.jpg";
@@ -17,7 +17,7 @@ const RecipeList = () => {
   const initialPage = parseInt(query.get("page"), 10) || 1;
   const [page, setPage] = useState(initialPage);
 
-  const fetchRecipes = useCallBack(async () => {
+  const fetchRecipes = useCallback(async () => {
     const API_KEY = "12847d8415f74e28b267";
     const SERVICE_ID = "COOKRCP01";
     const DATA_TYPE = "json";
