@@ -31,7 +31,7 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
-  background-color: #f8f8f8;
+  background-color: #E9E7E3;
   margin-bottom: 15px;
   padding: 15px;
   border-radius: 5px;

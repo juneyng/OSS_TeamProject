@@ -1,56 +1,3 @@
-/*
-import React from 'react'
-import styled from "styled-components";
-
-const MainContainer = styled.div`
-  background-color: #F6F7FB;
-  height: 100vh;
-  width: 100vw;
-`;
-
-const Card = styled.div`
-  height: 20vh;
-  background-color: white;
-
-  margin: 5vh 5vh 5vh 5vh;
-  padding: 5vh 10vh;
-
-  display: flex;
-  flex-direction: row;
-
-`;
-
-const Menu = styled.h3`
-`;
-
-const MenuType = styled.p`
-`;
-
-const CookTime = styled.p`
-
-`;
-
-const FoodLevel = styled.p`
-`;
-
-const FoodScore = styled.p`
-`;
-
-export default function myList() {
-  return (
-    <MainContainer>
-      <Card>
-        <Menu>새우 두부 계란찜</Menu>
-        <MenuType>반찬</MenuType>
-        <CookTime>1.5h</CookTime>
-        <FoodLevel>Hard</FoodLevel>
-        <FoodScore>3.0 / 5.0</FoodScore>
-      </Card>
-    </MainContainer>
-  )
-}
-*/
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -103,23 +50,53 @@ export default function ShowList() {
     }
   };
 
+  // 리뷰가 있는 요리와 없는 요리로 분류
+  const reviewedNotes = notes.filter(note => note.haveReview);
+  const toTryNotes = notes.filter(note => !note.haveReview);
+
+  // ingredients에서 줄 바꿈을 HTML <br />로 변환
+  const formatIngredients = (ingredients) => {
+    // 줄 바꿈 문자를 <br />로 변환
+    const formattedIngredients = ingredients.replace(/\n/g, '<br />');
+    return <Ingredients dangerouslySetInnerHTML={{ __html: `재료: ${formattedIngredients}` }} />;
+  };
+
   return (
     <Container>
-      <Title>요리 노트 목록</Title>
+
       <div style={{ textAlign: 'right', marginBottom: '20px' }}>
         <Button onClick={getData}>데이터 새로고침</Button>
         <Link to="/create">
           <Button>노트 추가</Button>
         </Link>
       </div>
+
+      {/* 리뷰 남긴 요리 제목 */}
+      {reviewedNotes.length > 0 && (
+        <div style={{ backgroundColor: '#6cc357', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
+          <h2 style={{ color: 'white', margin: 0 }}>리뷰 남긴 요리</h2>
+        </div>
+      )}
+
+      {/* 리뷰 남긴 요리 목록 */}
       <List>
-        {notes.map((note) => (
+        {reviewedNotes.map((note) => (
           <ListItem key={note.id}>
             <NoteHeader>
               <MenuInfo>
                 <MenuName>{note.menuName}</MenuName>
-                <Ingredients>재료: {note.ingredients}</Ingredients>
+                {formatIngredients(note.ingredients)}
               </MenuInfo>
+              <Actions>
+                <Link to={`/update/${note.id}`}>
+                  <Button>
+                    <FaPen />
+                  </Button>
+                </Link>
+                <Button onClick={() => deleteData(note.id)}>
+                  <FaTrash />
+                </Button>
+              </Actions>
               {note.haveReview && (
                 <ReviewContainer>
                   {note.cookTime && (
@@ -142,6 +119,30 @@ export default function ShowList() {
                   )}
                 </ReviewContainer>
               )}
+            </NoteHeader>
+            {note.foodComment && (
+              <Comment>{note.foodComment}</Comment>
+            )}
+          </ListItem>
+        ))}
+      </List>
+
+      {/* 해보고 싶은 요리 제목 */}
+      {toTryNotes.length > 0 && (
+        <div style={{ backgroundColor: '#6cc357', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
+          <h2 style={{ color: 'white', margin: 0 }}>해보고 싶은 요리</h2>
+        </div>
+      )}
+
+      {/* 해보고 싶은 요리 목록 */}
+      <List>
+        {toTryNotes.map((note) => (
+          <ListItem key={note.id}>
+            <NoteHeader>
+              <MenuInfo>
+                <MenuName>{note.menuName}</MenuName>
+                {formatIngredients(note.ingredients)}
+              </MenuInfo>
               <Actions>
                 <Link to={`/update/${note.id}`}>
                   <Button>
@@ -153,9 +154,6 @@ export default function ShowList() {
                 </Button>
               </Actions>
             </NoteHeader>
-            {note.haveReview && note.foodComment && (
-              <Comment>{note.foodComment}</Comment>
-            )}
           </ListItem>
         ))}
       </List>
