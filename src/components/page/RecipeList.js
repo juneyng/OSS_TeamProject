@@ -76,10 +76,10 @@ const RecipeList = () => {
   const handleSaveToMockAPI = async (recipe) => {
     // '담기' 버튼 누를 시 mockAPI에 전달됨
     const payload = {
-      id: recipe.RCP_SEQ,
       menuName: recipe.RCP_NM, // 메뉴 이름
       ingredients: recipe.RCP_PARTS_DTLS, // 사용된 재료
-      haveReview: true, // 리뷰 여부
+      foodNum: recipe.RCP_SEQ,
+      haveReview: false, // 리뷰 여부
       cookTime: null,
       cookLevel: null,
       foodScore: null,
