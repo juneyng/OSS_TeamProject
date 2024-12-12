@@ -58,7 +58,7 @@ const RecipeList = () => {
       id: recipe.RCP_SEQ,
       menuName: recipe.RCP_NM, // 메뉴 이름
       ingredients: recipe.RCP_PARTS_DTLS, // 사용된 재료
-      haveReview: true, // 리뷰 여부
+      haveReview: false, // 리뷰 여부
       cookTime: null,
       cookLevel: null,
       foodScore: null,
