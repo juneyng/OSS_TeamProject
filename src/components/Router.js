@@ -15,11 +15,9 @@ export default function AppRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/recipe-list" />} />
-        <Route element={<SideMenu />}>
-          <Route path="/recipe-list" element={<RecipeList />} />
-          <Route path="/mylist" element={<MyList />} />
-          <Route path="/recipe/:id" element={<Recipe />} />
-        </Route>
+        <Route path="/recipe-list" element={<RecipeList />} />
+        <Route path="/mylist" element={<MyList />} />
+        <Route path="/recipe/:id" element={<Recipe />} />
       </Routes>
     </Router>
   );
