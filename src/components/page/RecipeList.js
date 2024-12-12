@@ -182,10 +182,7 @@ const RecipeList = () => {
           이전
         </button>
         <span className="pagination-page">페이지 {page}</span>
-        <button
-          className="pagination-button"
-          onClick={handleNextPage}
-        >
+        <button className="pagination-button" onClick={handleNextPage}>
           다음
         </button>
       </div>
