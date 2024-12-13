@@ -8,7 +8,7 @@ import {
 import RecipeList from "./page/RecipeList";
 import MyList from "./page/myList";
 import Recipe from "./page/Recipe";
-import SideMenu from "./Sidemenu";
+import UpdateReview from "./page/updateReview";
 
 export default function AppRouter() {
   return (
@@ -18,6 +18,7 @@ export default function AppRouter() {
         <Route path="/recipe-list" element={<RecipeList />} />
         <Route path="/mylist" element={<MyList />} />
         <Route path="/recipe/:id" element={<Recipe />} />
+        <Route path="/updateReview/:id" element={<UpdateReview />} />
       </Routes>
     </Router>
   );

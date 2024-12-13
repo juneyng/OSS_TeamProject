@@ -16,6 +16,8 @@ import {
   Actions,
 } from '../styled_components';
 import { FaPen, FaTrash, FaClock, FaStar, FaLevelUpAlt } from 'react-icons/fa';
+import { PiNotePencilBold } from "react-icons/pi";
+
 
 export default function ShowList() {
   const [notes, setNotes] = useState([]);
@@ -144,11 +146,19 @@ export default function ShowList() {
                 {formatIngredients(note.ingredients)}
               </MenuInfo>
               <Actions>
-                <Link to={`/update/${note.id}`}>
-                  <Button>
-                    <FaPen />
-                  </Button>
-                </Link>
+                {note.haveReview ? (
+                  <Link to={`/update/${note.id}`}>
+                    <Button>
+                      <FaPen />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to={`/updateReview/${note.id}`}>
+                    <Button><PiNotePencilBold />
+
+                    </Button>
+                  </Link>
+                )}
                 <Button onClick={() => deleteData(note.id)}>
                   <FaTrash />
                 </Button>
