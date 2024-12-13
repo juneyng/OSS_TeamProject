@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Container,
-  Title,
   Button,
   List,
   ListItem,
@@ -16,6 +14,14 @@ import {
   Actions,
 } from '../styled_components';
 import { FaPen, FaTrash, FaClock, FaStar, FaLevelUpAlt } from 'react-icons/fa';
+import { PiNotePencilBold } from "react-icons/pi";
+import styled from 'styled-components';
+
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+`;
 
 export default function ShowList() {
   const [notes, setNotes] = useState([]);
@@ -144,11 +150,19 @@ export default function ShowList() {
                 {formatIngredients(note.ingredients)}
               </MenuInfo>
               <Actions>
-                <Link to={`/update/${note.id}`}>
-                  <Button>
-                    <FaPen />
-                  </Button>
-                </Link>
+                {note.haveReview ? (
+                  <Link to={`/update/${note.id}`}>
+                    <Button>
+                      <FaPen />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to={`/updateReview/${note.id}`}>
+                    <Button><PiNotePencilBold />
+
+                    </Button>
+                  </Link>
+                )}
                 <Button onClick={() => deleteData(note.id)}>
                   <FaTrash />
                 </Button>
