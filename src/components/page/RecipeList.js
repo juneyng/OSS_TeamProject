@@ -18,11 +18,13 @@ const RecipeList = () => {
   const [page, setPage] = useState(initialPage);
 
   const fetchRecipes = useCallback(async () => {
+    if (recipes.length > 0) return; // 이미 데이터를 요청한 경우 실행하지 않음
+
     const API_KEY = "12847d8415f74e28b267";
     const SERVICE_ID = "COOKRCP01";
     const DATA_TYPE = "json";
-    const START_IDX = (page - 1) * RECIPES_PER_PAGE + 1;
-    const END_IDX = page * RECIPES_PER_PAGE;
+    const START_IDX = 1;
+    const END_IDX = 180;
 
     const url = `https://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
 
@@ -34,7 +36,7 @@ const RecipeList = () => {
       }
       const data = await response.json();
       setRecipes(data.COOKRCP01.row);
-      setFilteredRecipes(data.COOKRCP01.row);
+      setFilteredRecipes(data.COOKRCP01.row.slice(0, RECIPES_PER_PAGE));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -46,6 +48,12 @@ const RecipeList = () => {
     fetchRecipes();
   }, [fetchRecipes]);
 
+  useEffect(() => {
+    const startIndex = (page - 1) * RECIPES_PER_PAGE;
+    const endIndex = startIndex + RECIPES_PER_PAGE;
+    setFilteredRecipes(recipes.slice(startIndex, endIndex)); // 저장된 데이터를 기반으로 보여줌
+  }, [page, recipes]);  
+
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase(); // 검색어 소문자로 변환
     setSearchTerm(term);
@@ -56,20 +64,21 @@ const RecipeList = () => {
         recipe.RCP_PAT2.toLowerCase().includes(term) // 요리 분류 검색
     );
 
-    setFilteredRecipes(filtered);
+    setFilteredRecipes(filtered.slice(0, RECIPES_PER_PAGE)); // 첫 페이지 데이터만 표시
+    setPage(1);
   };
 
   const handleNextPage = () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    navigate(`?page=${nextPage}`); // URL 업데이트
+    navigate(`?page=${nextPage}`, {replace: true}); // URL 업데이트
   };
 
   const handlePrevPage = () => {
     const prevPage = page - 1;
     if (prevPage > 0) {
       setPage(prevPage);
-      navigate(`?page=${prevPage}`); // URL 업데이트
+      navigate(`?page=${prevPage}`, {replace: true}); // URL 업데이트
     }
   };
 
@@ -117,7 +126,7 @@ const RecipeList = () => {
 
   return (
     <div className="recipe-list-container">
-      <div className="logo">
+      {/* <div className="logo">
         <img
           className="img1"
           src={cookingnote}
@@ -126,7 +135,7 @@ const RecipeList = () => {
           onClick={() => (window.location.href = "/recipe-list")}
         />
         <a href="/mylist">내 레시피</a>
-      </div>
+      </div> */}
 
       <div className="search-bar">
         <input
@@ -183,7 +192,12 @@ const RecipeList = () => {
           이전
         </button>
         <span className="pagination-page">페이지 {page}</span>
-        <button className="pagination-button" onClick={handleNextPage}>
+        <button 
+          className="pagination-button"
+          onClick={handleNextPage}
+          disabled={page * RECIPES_PER_PAGE >= recipes.length} // 마지막 페이지에서 비활성화
+
+        >
           다음
         </button>
       </div>

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Container,
-  Title,
   Button,
   List,
   ListItem,
@@ -17,7 +15,13 @@ import {
 } from '../styled_components';
 import { FaPen, FaTrash, FaClock, FaStar, FaLevelUpAlt } from 'react-icons/fa';
 import { PiNotePencilBold } from "react-icons/pi";
+import styled from 'styled-components';
 
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+`;
 
 export default function ShowList() {
   const [notes, setNotes] = useState([]);
