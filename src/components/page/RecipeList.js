@@ -125,6 +125,7 @@ const RecipeList = () => {
           style={{ cursor: "pointer" }}
           onClick={() => (window.location.href = "/recipe-list")}
         />
+        <a href="/mylist">내 레시피</a>
       </div>
 
       <div className="search-bar">
