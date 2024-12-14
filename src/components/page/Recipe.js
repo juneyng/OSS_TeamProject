@@ -7,16 +7,21 @@ const Recipe = () => {
   const [recipe, setRecipe] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0); // 재시도 횟수 제한
 
   useEffect(() => {
     const fetchRecipe = async () => {
       const API_KEY = "12847d8415f74e28b267";
       const SERVICE_ID = "COOKRCP01";
       const DATA_TYPE = "json";
+      
+
 
       const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/1/100`;
 
+
       try {
+        setLoading(true);
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -25,9 +30,19 @@ const Recipe = () => {
         const selectedRecipe = data.COOKRCP01.row.find(
           (recipe) => recipe.RCP_SEQ === id
         );
+        if (!selectedRecipe) {
+          throw new Error("Recipe not found");
+        }
         setRecipe(selectedRecipe);
       } catch (err) {
-        setError(err.message);
+        if (retryCount < 5) { // 재시도 횟수 제한 설정
+          console.error("Fetch error, retrying...", err);
+          setRetryCount((prevCount) => prevCount + 1);
+          window.location.reload(); // 새로고침
+        } else {
+          console.error("Failed to fetch data after multiple retries", err);
+          alert("데이터를 가져오는데 실패했습니다. 다시 시도해주세요.");
+        }
       } finally {
         setLoading(false);
       }
@@ -37,7 +52,7 @@ const Recipe = () => {
   }, [id]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  // if (error) return <p>Error: {error}</p>;
   if (!recipe) return <p>레시피를 찾을 수 없습니다.</p>;
 
   return (
