@@ -6,6 +6,7 @@ const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(""); // 선택된 카테고리 상태 추가
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const RecipeList = () => {
   const [page, setPage] = useState(initialPage);
 
   const fetchRecipes = useCallback(async () => {
-    if (recipes.length > 0) return; // 이미 데이터를 요청한 경우 실행하지 않음
+    if (recipes.length > 0) return;
 
     const API_KEY = "12847d8415f74e28b267";
     const SERVICE_ID = "COOKRCP01";
@@ -41,53 +42,63 @@ const RecipeList = () => {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [recipes]);
 
   useEffect(() => {
     fetchRecipes();
   }, [fetchRecipes]);
 
   useEffect(() => {
+    // 선택된 카테고리 또는 검색어에 따라 필터링
+    let filtered = recipes;
+
+    if (selectedCategory) {
+      filtered = filtered.filter(
+        (recipe) => recipe.RCP_PAT2 === selectedCategory
+      );
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (recipe) =>
+          recipe.RCP_NM.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          recipe.RCP_PAT2.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
     const startIndex = (page - 1) * RECIPES_PER_PAGE;
     const endIndex = startIndex + RECIPES_PER_PAGE;
-    setFilteredRecipes(recipes.slice(startIndex, endIndex)); // 저장된 데이터를 기반으로 보여줌
-  }, [page, recipes]);
+    setFilteredRecipes(filtered.slice(startIndex, endIndex));
+  }, [page, recipes, searchTerm, selectedCategory]);
 
   const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase(); // 검색어 소문자로 변환
-    setSearchTerm(term);
+    setSearchTerm(e.target.value);
+    setPage(1); // 검색 시 페이지를 처음으로
+  };
 
-    const filtered = recipes.filter(
-      (recipe) =>
-        recipe.RCP_NM.toLowerCase().includes(term) || // 레시피 이름 검색
-        recipe.RCP_PAT2.toLowerCase().includes(term) // 요리 분류 검색
-    );
-
-    setFilteredRecipes(filtered.slice(0, RECIPES_PER_PAGE)); // 첫 페이지 데이터만 표시
-    setPage(1);
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setPage(1); // 카테고리 변경 시 페이지를 처음으로
   };
 
   const handleNextPage = () => {
-    const nextPage = page + 1;
-    setPage(nextPage);
-    navigate(`?page=${nextPage}`, { replace: true }); // URL 업데이트
+    setPage((prevPage) => prevPage + 1);
+    navigate(`?page=${page + 1}`, { replace: true });
   };
 
   const handlePrevPage = () => {
-    const prevPage = page - 1;
-    if (prevPage > 0) {
-      setPage(prevPage);
-      navigate(`?page=${prevPage}`, { replace: true }); // URL 업데이트
+    if (page > 1) {
+      setPage((prevPage) => prevPage - 1);
+      navigate(`?page=${page - 1}`, { replace: true });
     }
   };
 
   const handleSaveToMockAPI = async (recipe) => {
-    // '담기' 버튼 누를 시 mockAPI에 전달됨
     const payload = {
-      menuName: recipe.RCP_NM, // 메뉴 이름
-      ingredients: recipe.RCP_PARTS_DTLS, // 사용된 재료
+      menuName: recipe.RCP_NM,
+      ingredients: recipe.RCP_PARTS_DTLS,
       foodNum: recipe.RCP_SEQ,
-      haveReview: false, // 리뷰 여부
+      haveReview: false,
       cookTime: null,
       cookLevel: null,
       foodScore: null,
@@ -117,7 +128,7 @@ const RecipeList = () => {
   };
 
   const handleRecipeClick = (id) => {
-    navigate(`/recipe/${id}`); // /recipe/:id 경로로 이동
+    navigate(`/recipe/${id}`);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -137,11 +148,15 @@ const RecipeList = () => {
       <div className="option">
         <nav>
           <ul>
-            <li>밥</li>
-            <li>반찬</li>
-            <li>국/찌개</li>
-            <li>후식</li>
-            <li>기타</li>
+            {["밥", "반찬", "국&찌개", "후식", "일품"].map((category) => (
+              <li
+                key={category}
+                className={selectedCategory === category ? "active" : ""}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category}
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
@@ -171,6 +186,7 @@ const RecipeList = () => {
           <p className="no-results">검색 결과가 없습니다.</p>
         )}
       </div>
+
       <div className="pagination">
         <button
           className="pagination-button"
@@ -183,7 +199,7 @@ const RecipeList = () => {
         <button
           className="pagination-button"
           onClick={handleNextPage}
-          disabled={page * RECIPES_PER_PAGE >= recipes.length} // 마지막 페이지에서 비활성화
+          disabled={page * RECIPES_PER_PAGE >= recipes.length}
         >
           다음
         </button>
