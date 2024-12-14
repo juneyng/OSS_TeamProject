@@ -12,6 +12,7 @@ import {
   ReviewItem,
   Comment,
   Actions,
+  MenuName2,
 } from "../styled_components";
 import { FaPen, FaTrash, FaClock, FaStar, FaLevelUpAlt } from "react-icons/fa";
 import { PiNotePencilBold } from "react-icons/pi";
@@ -50,6 +51,7 @@ export default function ShowList() {
           method: "DELETE",
         }
       );
+      alert("삭제되었습니다.");
       getData();
     } catch (error) {
       console.error("데이터 삭제 오류:", error);
@@ -61,26 +63,28 @@ export default function ShowList() {
   const toTryNotes = notes.filter((note) => !note.haveReview);
 
   // ingredients에서 줄 바꿈을 HTML <br />로 변환
-  const formatIngredients = (ingredients) => {
-    // 줄 바꿈 문자를 <br />로 변환
-    const formattedIngredients = ingredients.replace(/\n/g, "<br />");
+  const formatIngredients = (ingredients, menuName) => {
+    let formattedIngredients = ingredients;
+
+    if (!ingredients.startsWith('●')) {
+      // 첫 줄 제거 (첫 번째 \n 이후 문자열만 사용)
+      const splitIngredients = ingredients.split('\n');
+      splitIngredients.shift(); // 첫 번째 줄 제거
+      formattedIngredients = splitIngredients.join(', ');
+    }
+
+    formattedIngredients = formattedIngredients.replace(/\n/g, "<br />");
     return (
       <Ingredients
-        dangerouslySetInnerHTML={{ __html: `재료: ${formattedIngredients}` }}
+        dangerouslySetInnerHTML={{ __html: `${formattedIngredients}`}}
       />
     );
   };
 
   return (
     <Container>
-      <div style={{ textAlign: "right", marginBottom: "20px" }}>
-        <Button onClick={getData}>데이터 새로고침</Button>
-        <Link to="/create">
-          <Button>노트 추가</Button>
-        </Link>
-      </div>
 
-      {/* 리뷰 남긴 요리 제목 */}
+      {/* 리뷰 남긴 요리 목록 */}
       {reviewedNotes.length > 0 && (
         <div
           style={{
@@ -96,27 +100,31 @@ export default function ShowList() {
         </div>
       )}
 
-      {/* 리뷰 남긴 요리 목록 */}
       <List>
         {reviewedNotes.map((note) => (
           <ListItem key={note.id}>
             <NoteHeader>
               <MenuInfo>
-                <MenuName>{note.menuName}</MenuName>
-                {formatIngredients(note.ingredients)}
-              </MenuInfo>
-              <Actions>
-                <Link to={`/updateReview/${note.id}`}>
-                  <Button>
-                    <FaPen />
-                  </Button>
-                </Link>
-                <Button onClick={() => deleteData(note.id)}>
-                  <FaTrash />
-                </Button>
-              </Actions>
+                <div style={{display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #d2d2d2', paddingBottom: '7px', marginBottom: '7px'}}>
+                  <MenuName>{note.menuName}</MenuName>
+                  <Actions style={{justifySelf: 'flex-end'}}>
+                    <Link to={`/updateReview/${note.id}`}>
+                      <Button>
+                        <FaPen />
+                      </Button>
+                    </Link>
+                    <Button onClick={() => deleteData(note.id)}>
+                      <FaTrash />
+                    </Button>
+                  </Actions>
+                </div>
+                <MenuName2>재료</MenuName2>
+                {formatIngredients(note.ingredients, note.menuName)}
+              
               {note.haveReview && (
                 <ReviewContainer>
+                <MenuName2>나의 리뷰</MenuName2>
+                <div style={{display: 'flex'}}>
                   {note.cookTime && (
                     <ReviewItem>
                       <FaClock />
@@ -126,66 +134,51 @@ export default function ShowList() {
                   {note.cookLevel && (
                     <ReviewItem>
                       <FaLevelUpAlt />
-                      난이도: {note.cookLevel}
+                      난이도: {note.cookLevel} / 5
                     </ReviewItem>
                   )}
                   {note.foodScore && (
                     <ReviewItem>
                       <FaStar />
-                      평점: {note.foodScore}
+                      평점: {note.foodScore} / 5
                     </ReviewItem>
                   )}
+                </div>
                 </ReviewContainer>
               )}
+              </MenuInfo>
             </NoteHeader>
             {note.foodComment && <Comment>{note.foodComment}</Comment>}
           </ListItem>
         ))}
       </List>
 
-      {/* 해보고 싶은 요리 제목 */}
+      {/* 해보고 싶은 요리 목록 */}
       {toTryNotes.length > 0 && (
-        <div
-          style={{
-            backgroundColor: "#6cc357",
-            padding: "10px",
-            marginBottom: "10px",
-            borderRadius: "5px",
-          }}
-        >
-          <h2 style={{ textAlign: "center", color: "white", margin: 0 }}>
-            해보고 싶은 요리
-          </h2>
+        <div style={{ backgroundColor: '#6cc357', padding: '10px', marginBottom: '10px', borderRadius: '5px', marginTop: '40px' }}>
+          <h2 style={{ textAlign: 'center', color: 'white', margin: 0 }}>해보고 싶은 요리</h2>
         </div>
       )}
 
-      {/* 해보고 싶은 요리 목록 */}
       <List>
         {toTryNotes.map((note) => (
           <ListItem key={note.id}>
             <NoteHeader>
               <MenuInfo>
-                <MenuName>{note.menuName}</MenuName>
-                {formatIngredients(note.ingredients)}
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <MenuName>{note.menuName}</MenuName>
+                  <Actions>
+                    <Link to={`/updateReview/${note.id}`}>
+                      <Button><PiNotePencilBold /></Button>
+                    </Link>
+                    <Button onClick={() => deleteData(note.id)}>
+                      <FaTrash />
+                    </Button>
+                  </Actions>
+                </div>
+                {formatIngredients(note.ingredients, note.menuName)}
               </MenuInfo>
-              <Actions>
-                {note.haveReview ? (
-                  <Link to={`/update/${note.id}`}>
-                    <Button>
-                      <FaPen />
-                    </Button>
-                  </Link>
-                ) : (
-                  <Link to={`/updateReview/${note.id}`}>
-                    <Button>
-                      <PiNotePencilBold />
-                    </Button>
-                  </Link>
-                )}
-                <Button onClick={() => deleteData(note.id)}>
-                  <FaTrash />
-                </Button>
-              </Actions>
+              
             </NoteHeader>
           </ListItem>
         ))}
