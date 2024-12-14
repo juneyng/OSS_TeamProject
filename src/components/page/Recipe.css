@@ -1,0 +1,103 @@
+/* 전체 컨테이너 */
+.recipe-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Arial", sans-serif;
+}
+
+/* 제목 */
+.recipe-main-title {
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 메인 이미지 */
+.recipe-main-image-container {
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 가로로 중앙 정렬 */
+  margin-bottom: 20px;
+}
+
+.recipe-main-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* 정보 섹션 */
+.recipe-info {
+  margin-bottom: 20px;
+}
+
+.recipe-info p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 5px 0;
+}
+
+.recipe-info strong {
+  color: #6cc357;
+}
+
+/* 조리 단계 */
+.recipe-steps {
+  margin-top: 40px;
+}
+
+.recipe-step {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.recipe-step:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-step img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+/* 조리 단계 제목 */
+.recipe-step p strong {
+  color: #333;
+  font-weight: bold;
+}
+
+/* 해시태그 */
+.recipe-hashtag {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #6cc357;
+  font-weight: bold;
+}
+
+/* 재료 및 조리 팁 */
+.recipe-details {
+  margin-top: 20px;
+}
+
+.recipe-details p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 5px 0;
+}
+
+.recipe-details strong {
+  color: #6cc357;
+}

@@ -90,7 +90,9 @@ export default function ShowList() {
             borderRadius: "5px",
           }}
         >
-          <h2 style={{ color: "white", margin: 0 }}>리뷰 남긴 요리</h2>
+          <h2 style={{ textAlign: "center", color: "white", margin: 0 }}>
+            리뷰 남긴 요리
+          </h2>
         </div>
       )}
 
@@ -151,7 +153,9 @@ export default function ShowList() {
             borderRadius: "5px",
           }}
         >
-          <h2 style={{ color: "white", margin: 0 }}>해보고 싶은 요리</h2>
+          <h2 style={{ textAlign: "center", color: "white", margin: 0 }}>
+            해보고 싶은 요리
+          </h2>
         </div>
       )}
 
