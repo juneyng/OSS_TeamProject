@@ -21,7 +21,7 @@ const RecipeList = () => {
   const fetchRecipes = useCallback(async () => {
     if (recipes.length > 0) return;
 
-    const API_KEY = "12847d8415f74e28b267";
+    const API_KEY = "24d59e1705d947f995e6";
     const SERVICE_ID = "COOKRCP01";
     const DATA_TYPE = "json";
     const START_IDX = 1;

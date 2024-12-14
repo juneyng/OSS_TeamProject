@@ -10,11 +10,11 @@ const Recipe = () => {
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      const API_KEY = "12847d8415f74e28b267";
+      const API_KEY = "24d59e1705d947f995e6";
       const SERVICE_ID = "COOKRCP01";
       const DATA_TYPE = "json";
 
-      const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/1/100`;
+      const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/1/180`;
 
       try {
         const response = await fetch(url);
