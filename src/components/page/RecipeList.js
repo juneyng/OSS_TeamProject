@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./RecipeList.css";
+import loadingGif from "./loading.gif";
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -131,7 +132,19 @@ const RecipeList = () => {
     navigate(`/recipe/${id}`);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", margin: "-130px 0 50px 0" }}>
+        <img
+          src={loadingGif}
+          alt="Loading..."
+          style={{ width: "300px", height: "300px" }} // 크기를 조정
+        />
+      </div>
+    );
+  }
+
+  // if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
