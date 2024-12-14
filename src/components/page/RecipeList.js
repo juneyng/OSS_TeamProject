@@ -150,8 +150,8 @@ const RecipeList = () => {
     }
   };
 
-  const handleRecipeClick = (id) => {
-    navigate(`/recipe/${id}`);
+  const handleRecipeClick = (recipe) => {
+    navigate(`/recipe/${recipe.RCP_SEQ}`, { state: { recipe } });
   };
 
   if (loading) {
@@ -229,7 +229,7 @@ const RecipeList = () => {
                 src={recipe.ATT_FILE_NO_MAIN}
                 alt={recipe.RCP_NM}
                 className="recipe-image"
-                onClick={() => handleRecipeClick(recipe.RCP_SEQ)}
+                onClick={() => handleRecipeClick(recipe)} // 레시피 클릭 시 데이터 전달
                 style={{ cursor: "pointer" }}
               />
               <p className="recipe-title">{recipe.RCP_NM}</p>
