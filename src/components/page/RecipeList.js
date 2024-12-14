@@ -144,8 +144,32 @@ const RecipeList = () => {
     );
   }
 
-  // if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  // 로딩 실패 시 다시 시도 로직
+  if (error) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <p style={{ color: "red" }}>불러오기 실패, '다시 시도'를 눌러주세요!</p>
+        <button
+          onClick={() => {
+            setError(null); // 에러 상태 초기화
+            setLoading(true); // 로딩 상태로 전환
+            fetchRecipes(); // 다시 데이터 요청
+          }}
+          style={{
+            marginTop: "20px",
+            padding: "10px 20px",
+            backgroundColor: "#6cc357",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          다시 시도
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="recipe-list-container">
