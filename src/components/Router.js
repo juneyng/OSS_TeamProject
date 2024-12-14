@@ -20,6 +20,7 @@ export default function AppRouter() {
         <Route path="/recipe-list" element={<RecipeList />} />
         <Route path="/mylist" element={<MyList />} />
         <Route path="/recipe/:id" element={<Recipe />} />
+        <Route path="/createReview/:id" element={<UpdateReview />} />
         <Route path="/updateReview/:id" element={<UpdateReview />} />
       </Routes>
     </Router>

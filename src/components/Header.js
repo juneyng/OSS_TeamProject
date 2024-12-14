@@ -36,13 +36,13 @@ const TopButton = styled.a`
 
 export default function Header() {
   const location = useLocation();
-  const linkTo = location.pathname === "/recipe-list"? "/mylist" : "/recipe-list";
+  const linkTo = location.pathname === "/mylist"? "/recipe-list" : "/mylist";
   return (
     <Container>
-      <Link to="/recipe-list">
+      <a href="/recipe-list">
         <Logo src={cookingnote} alt="요리 노트"/>
-      </Link>
-      <TopButton href={linkTo}>{location.pathname === "/recipe-list" ? "내 레시피" : "레시피 목록"}</TopButton>
+      </a>
+      <TopButton href={linkTo}>{location.pathname === "/mylist" ? "레시피 목록" : "내 레시피"}</TopButton>
     </Container>
   )
 }
