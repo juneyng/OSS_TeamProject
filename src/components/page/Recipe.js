@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Recipe.css";
+import loadingGif from "./loading.gif";
+
 
 const Recipe = () => {
   const { id } = useParams();
@@ -11,13 +13,13 @@ const Recipe = () => {
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      const API_KEY = "12847d8415f74e28b267";
+      const API_KEY = "24d59e1705d947f995e6";
       const SERVICE_ID = "COOKRCP01";
       const DATA_TYPE = "json";
       
 
 
-      const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/1/100`;
+      const url = `http://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/1/180`;
 
 
       try {
@@ -27,6 +29,11 @@ const Recipe = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+
+        if (!data.COOKRCP01?.row || !Array.isArray(data.COOKRCP01.row)) {
+          throw new Error("Invalid data structure");
+        }
+
         const selectedRecipe = data.COOKRCP01.row.find(
           (recipe) => recipe.RCP_SEQ === id
         );
@@ -35,12 +42,14 @@ const Recipe = () => {
         }
         setRecipe(selectedRecipe);
       } catch (err) {
-        if (retryCount < 5) { // 재시도 횟수 제한 설정
-          console.error("Fetch error, retrying...", err);
-          setRetryCount((prevCount) => prevCount + 1);
-          window.location.reload(); // 새로고침
+        console.error(`Fetch error: ${err.message}`);
+        setError(err.message);
+
+        // 재시도 로직 추가
+        if (retryCount < 5) {
+          console.log(`Retrying... Attempt ${retryCount + 1}`);
+          setTimeout(() => setRetryCount((prev) => prev + 1), 500); // 500ms 후 재시도
         } else {
-          console.error("Failed to fetch data after multiple retries", err);
           alert("데이터를 가져오는데 실패했습니다. 다시 시도해주세요.");
         }
       } finally {
@@ -49,11 +58,21 @@ const Recipe = () => {
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [id, retryCount]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", margin: "-130px 0 50px 0" }}>
+        <img
+          src={loadingGif}
+          alt="Loading..."
+          style={{ width: "300px", height: "300px" }} // 크기를 조정
+        />
+      </div>
+    );
+  }
   // if (error) return <p>Error: {error}</p>;
-  if (!recipe) return <p>레시피를 찾을 수 없습니다.</p>;
+  // if (!recipe) return <p>레시피를 찾을 수 없습니다.</p>;
 
   return (
     <div className="recipe-container">

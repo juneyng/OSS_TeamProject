@@ -21,7 +21,7 @@ const RecipeList = () => {
   const fetchRecipes = useCallback(async () => {
     if (recipes.length > 0) return;
 
-    const API_KEY = "12847d8415f74e28b267";
+    const API_KEY = "24d59e1705d947f995e6";
     const SERVICE_ID = "COOKRCP01";
     const DATA_TYPE = "json";
     const START_IDX = 1;
@@ -33,34 +33,38 @@ const RecipeList = () => {
     const MAX_RETRIES = 10;
     let retries = 0;
     
-      while(retries < MAX_RETRIES) {
-    try {
-      setLoading(true);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setRecipes(data.COOKRCP01.row);
-      setFilteredRecipes(data.COOKRCP01.row.slice(0, RECIPES_PER_PAGE));
-      setError(null); // 에러 상태 초기화
-      break; // 성공적으로 데이터를 가져왔을 때 루프 종료
-    } catch (err) {
-      retries += 1;
-      console.error(`Fetch attempt ${retries} failed: ${err.message}`);
-      setError(err.message);
+    while(retries < MAX_RETRIES) {
+      try {
+        setLoading(true);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (!data.COOKRCP01?.row || !Array.isArray(data.COOKRCP01.row)) {
+          throw new Error("Invalid data structure");
+        }
 
-      if (retries >= MAX_RETRIES) {
-        alert("데이터를 가져오는데 실패했습니다. 다시 시도해주세요.");
-        break;
-      }
+        setRecipes(data.COOKRCP01.row);
+        setFilteredRecipes(data.COOKRCP01.row.slice(0, RECIPES_PER_PAGE));
+        setError(null); // 에러 상태 초기화
+        break; // 성공적으로 데이터를 가져왔을 때 루프 종료
+      } catch (err) {
+        retries += 1;
+        console.error(`Fetch attempt ${retries} failed: ${err.message}`);
+        setError(err.message);
 
-      // 일정 시간 대기 후 재시도 (500ms)
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    } finally {
-      setLoading(false);
+        if (retries >= MAX_RETRIES) {
+          alert("데이터를 가져오는데 실패했습니다. 다시 시도해주세요.");
+          break;
+        }
+
+        // 일정 시간 대기 후 재시도 (500ms)
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } finally {
+        setLoading(false);
+      }
     }
-  }
   }, [recipes]);
 
   useEffect(() => {
