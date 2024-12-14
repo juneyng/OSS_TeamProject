@@ -48,6 +48,7 @@ export const NoteHeader = styled.div`
 export const MenuInfo = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 
@@ -57,15 +58,23 @@ export const MenuName = styled.h2`
   margin: 0;
 `;
 
+export const MenuName2 = styled.h3`
+  font-size: 18px;
+  font-weight: bold;
+  margin: 6px 0 0 0;
+`
+
 export const Ingredients = styled.p`
-  font-size: 14px;
+  font-size: 15px;
   color: #666;
   margin: 5px 0 10px 0;
+  line-height: 1.6;
 `;
 
 export const ReviewContainer = styled.div`
+  width: 100%;
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   margin-top: 10px;
 `;
 
