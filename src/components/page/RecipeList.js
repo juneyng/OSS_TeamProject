@@ -29,11 +29,10 @@ const RecipeList = () => {
 
     const url = `https://openapi.foodsafetykorea.go.kr/api/${API_KEY}/${SERVICE_ID}/${DATA_TYPE}/${START_IDX}/${END_IDX}`;
 
-
     const MAX_RETRIES = 10;
     let retries = 0;
-    
-    while(retries < MAX_RETRIES) {
+
+    while (retries < MAX_RETRIES) {
       try {
         setLoading(true);
         const response = await fetch(url);
@@ -150,8 +149,8 @@ const RecipeList = () => {
     }
   };
 
-  const handleRecipeClick = (id) => {
-    navigate(`/recipe/${id}`);
+  const handleRecipeClick = (recipe) => {
+    navigate(`/recipe/${recipe.RCP_SEQ}`, { state: { recipe } });
   };
 
   if (loading) {
@@ -229,7 +228,7 @@ const RecipeList = () => {
                 src={recipe.ATT_FILE_NO_MAIN}
                 alt={recipe.RCP_NM}
                 className="recipe-image"
-                onClick={() => handleRecipeClick(recipe.RCP_SEQ)}
+                onClick={() => handleRecipeClick(recipe)} // 레시피 클릭 시 데이터 전달
                 style={{ cursor: "pointer" }}
               />
               <p className="recipe-title">{recipe.RCP_NM}</p>

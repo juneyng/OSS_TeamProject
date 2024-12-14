@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 import cookingnote from "./page/cookingnote.jpg";
-import styled from 'styled-components';
-import { Link, useLocation } from 'react-router-dom';
+import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 
 const Container = styled.div`
   position: relative;
@@ -13,7 +13,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: flex-start;
   margin-top: 30px;
-
 `;
 
 const Logo = styled.img`
@@ -36,13 +35,15 @@ const TopButton = styled.a`
 
 export default function Header() {
   const location = useLocation();
-  const linkTo = location.pathname === "/mylist"? "/recipe-list" : "/mylist";
+  const linkTo = location.pathname === "/mylist" ? "/recipe-list" : "/mylist";
   return (
     <Container>
       <a href="/recipe-list">
-        <Logo src={cookingnote} alt="요리 노트"/>
+        <Logo src={cookingnote} alt="요리 노트" />
       </a>
-      <TopButton href={linkTo}>{location.pathname === "/mylist" ? "레시피 목록" : "내 레시피"}</TopButton>
+      <TopButton href={linkTo}>
+        {location.pathname === "/mylist" ? "레시피 목록" : "내 레시피"}
+      </TopButton>
     </Container>
-  )
+  );
 }
