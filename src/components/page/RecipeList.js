@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./RecipeList.css";
-import cookingnote from "./cookingnote.jpg";
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -52,7 +51,7 @@ const RecipeList = () => {
     const startIndex = (page - 1) * RECIPES_PER_PAGE;
     const endIndex = startIndex + RECIPES_PER_PAGE;
     setFilteredRecipes(recipes.slice(startIndex, endIndex)); // 저장된 데이터를 기반으로 보여줌
-  }, [page, recipes]);  
+  }, [page, recipes]);
 
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase(); // 검색어 소문자로 변환
@@ -71,14 +70,14 @@ const RecipeList = () => {
   const handleNextPage = () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    navigate(`?page=${nextPage}`, {replace: true}); // URL 업데이트
+    navigate(`?page=${nextPage}`, { replace: true }); // URL 업데이트
   };
 
   const handlePrevPage = () => {
     const prevPage = page - 1;
     if (prevPage > 0) {
       setPage(prevPage);
-      navigate(`?page=${prevPage}`, {replace: true}); // URL 업데이트
+      navigate(`?page=${prevPage}`, { replace: true }); // URL 업데이트
     }
   };
 
@@ -181,11 +180,10 @@ const RecipeList = () => {
           이전
         </button>
         <span className="pagination-page">페이지 {page}</span>
-        <button 
+        <button
           className="pagination-button"
           onClick={handleNextPage}
           disabled={page * RECIPES_PER_PAGE >= recipes.length} // 마지막 페이지에서 비활성화
-
         >
           다음
         </button>

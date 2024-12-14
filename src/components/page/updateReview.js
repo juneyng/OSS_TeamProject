@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Title,
@@ -8,17 +8,17 @@ import {
   Label,
   Input,
   TextArea,
-  Button
-} from '../styled_components';
+  Button,
+} from "../styled_components2";
 
 const UpdateReview = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    cookTime: '',
-    cookLevel: '',
-    foodScore: '',
-    foodComment: '',
+    cookTime: "",
+    cookLevel: "",
+    foodScore: "",
+    foodComment: "",
   });
 
   useEffect(() => {
@@ -29,13 +29,13 @@ const UpdateReview = () => {
         );
         const data = await response.json();
         setFormData({
-          cookTime: data.cookTime || '',
-          cookLevel: data.cookLevel || '',
-          foodScore: data.foodScore || '',
-          foodComment: data.foodComment || '',
+          cookTime: data.cookTime || "",
+          cookLevel: data.cookLevel || "",
+          foodScore: data.foodScore || "",
+          foodComment: data.foodComment || "",
         });
       } catch (error) {
-        console.error('데이터 가져오기 오류:', error);
+        console.error("데이터 가져오기 오류:", error);
       }
     };
 
@@ -56,17 +56,17 @@ const UpdateReview = () => {
       await fetch(
         `https://672819f2270bd0b975546091.mockapi.io/api/v1/recipeNote/${id}`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ ...formData, haveReview: true }),
         }
       );
-      alert('리뷰가 등록되었습니다.');
-      navigate('/');
+      alert("리뷰가 등록되었습니다.");
+      navigate("/");
     } catch (error) {
-      console.error('리뷰 등록 오류:', error);
+      console.error("리뷰 등록 오류:", error);
     }
   };
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Button,
   List,
@@ -13,10 +13,10 @@ import {
   Comment,
   Actions,
   MenuName2,
-} from '../styled_components';
-import { FaPen, FaTrash, FaClock, FaStar, FaLevelUpAlt } from 'react-icons/fa';
+} from "../styled_components";
+import { FaPen, FaTrash, FaClock, FaStar, FaLevelUpAlt } from "react-icons/fa";
 import { PiNotePencilBold } from "react-icons/pi";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -30,12 +30,12 @@ export default function ShowList() {
   const getData = async () => {
     try {
       const response = await fetch(
-        'https://672819f2270bd0b975546091.mockapi.io/api/v1/recipeNote'
+        "https://672819f2270bd0b975546091.mockapi.io/api/v1/recipeNote"
       );
       const data = await response.json();
       setNotes(data);
     } catch (error) {
-      console.error('데이터 가져오기 오류:', error);
+      console.error("데이터 가져오기 오류:", error);
     }
   };
 
@@ -48,19 +48,19 @@ export default function ShowList() {
       await fetch(
         `https://672819f2270bd0b975546091.mockapi.io/api/v1/recipeNote/${id}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
       );
       alert("삭제되었습니다.");
       getData();
     } catch (error) {
-      console.error('데이터 삭제 오류:', error);
+      console.error("데이터 삭제 오류:", error);
     }
   };
 
   // 리뷰가 있는 요리와 없는 요리로 분류
-  const reviewedNotes = notes.filter(note => note.haveReview);
-  const toTryNotes = notes.filter(note => !note.haveReview);
+  const reviewedNotes = notes.filter((note) => note.haveReview);
+  const toTryNotes = notes.filter((note) => !note.haveReview);
 
   // ingredients에서 줄 바꿈을 HTML <br />로 변환
   const formatIngredients = (ingredients, menuName) => {
@@ -73,8 +73,12 @@ export default function ShowList() {
       formattedIngredients = splitIngredients.join(', ');
     }
 
-    formattedIngredients = formattedIngredients.replace(/\n/g, '<br />');
-    return <Ingredients dangerouslySetInnerHTML={{ __html: `${formattedIngredients}`}} />;
+    formattedIngredients = formattedIngredients.replace(/\n/g, "<br />");
+    return (
+      <Ingredients
+        dangerouslySetInnerHTML={{ __html: `${formattedIngredients}`}}
+      />
+    );
   };
 
   return (
@@ -82,8 +86,17 @@ export default function ShowList() {
 
       {/* 리뷰 남긴 요리 목록 */}
       {reviewedNotes.length > 0 && (
-        <div style={{ backgroundColor: '#6cc357', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
-          <h2 style={{ color: 'white', margin: 0 }}>리뷰 남긴 요리</h2>
+        <div
+          style={{
+            backgroundColor: "#6cc357",
+            padding: "10px",
+            marginBottom: "10px",
+            borderRadius: "5px",
+          }}
+        >
+          <h2 style={{ textAlign: "center", color: "white", margin: 0 }}>
+            리뷰 남긴 요리
+          </h2>
         </div>
       )}
 
@@ -95,7 +108,7 @@ export default function ShowList() {
                 <div style={{display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #d2d2d2', paddingBottom: '7px', marginBottom: '7px'}}>
                   <MenuName>{note.menuName}</MenuName>
                   <Actions style={{justifySelf: 'flex-end'}}>
-                    <Link to={`/update/${note.id}`}>
+                    <Link to={`/updateReview/${note.id}`}>
                       <Button>
                         <FaPen />
                       </Button>
@@ -135,9 +148,7 @@ export default function ShowList() {
               )}
               </MenuInfo>
             </NoteHeader>
-            {note.foodComment && (
-              <Comment>{note.foodComment}</Comment>
-            )}
+            {note.foodComment && <Comment>{note.foodComment}</Comment>}
           </ListItem>
         ))}
       </List>
@@ -145,7 +156,7 @@ export default function ShowList() {
       {/* 해보고 싶은 요리 목록 */}
       {toTryNotes.length > 0 && (
         <div style={{ backgroundColor: '#6cc357', padding: '10px', marginBottom: '10px', borderRadius: '5px', marginTop: '40px' }}>
-          <h2 style={{ color: 'white', margin: 0 }}>해보고 싶은 요리</h2>
+          <h2 style={{ textAlign: 'center', color: 'white', margin: 0 }}>해보고 싶은 요리</h2>
         </div>
       )}
 
