@@ -1,5 +1,5 @@
 // src/components/styles.js
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   max-width: 800px;
@@ -17,7 +17,7 @@ export const Button = styled.button`
   color: #888;
   border: none;
   padding: 5px;
-  margin-left: ${(props) => props.marginLeft || '0'};
+  margin-left: ${(props) => props.marginLeft || "0"};
   cursor: pointer;
   font-size: 18px;
   &:hover {
@@ -31,7 +31,7 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
-  background-color: #E9E7E3;
+  background-color: #e9e7e3;
   margin-bottom: 15px;
   padding: 15px;
   border-radius: 5px;
@@ -44,12 +44,10 @@ export const NoteHeader = styled.div`
   flex-wrap: wrap;
 `;
 
-
 export const MenuInfo = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 
 export const MenuName = styled.h2`
   font-size: 24px;
