@@ -168,7 +168,7 @@ export default function ShowList() {
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
                   <MenuName>{note.menuName}</MenuName>
                   <Actions>
-                    <Link to={`/updateReview/${note.id}`}>
+                    <Link to={`/createReview/${note.id}`}>
                       <Button><PiNotePencilBold /></Button>
                     </Link>
                     <Button onClick={() => deleteData(note.id)}>
